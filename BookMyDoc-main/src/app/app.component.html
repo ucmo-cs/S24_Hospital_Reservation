@@ -1,0 +1,16 @@
+<nav class="c-r">
+  <ul class="margins">
+    <li><a *ngIf="!service.isLoginSuccessful" routerLink="/register" routerLinkActive="active">Register</a></li>
+    <li><a *ngIf="!service.isLoginSuccessful" routerLink="/login" routerLinkActive="active">Login</a></li>
+    <li><a *ngIf="service.isLoginSuccessful && service.isAdmin" routerLink="/doctors" routerLinkActive="active">Doctors</a></li>    
+    <li><a *ngIf="service.isLoginSuccessful && service.isPatient" routerLinkActive="active" routerLink="/bookAppointment" routerLinkActive="active">Book Appointments</a></li>
+    <li><a *ngIf="service.isLoginSuccessful" routerLink="/appointments" routerLinkActive="active">Appointments</a></li>
+    <li><a *ngIf="service.isLoginSuccessful && service.isAdmin" routerLinkActive="active"  routerLink="/hospital"  >Hospitals</a></li>
+    <li><a  *ngIf="service.isLoginSuccessful && service.isAdmin" routerLinkActive="active" routerLink="/specialization"  >Specializations</a></li>
+    <li><a *ngIf="service.isLoginSuccessful && service.isDoctor" routerLinkActive="active"  routerLink="/schedule" >Schedules</a></li>
+    <li><a *ngIf="service.isLoginSuccessful" routerLink="" (click)="logOut()" >Log Out</a></li>
+  </ul>
+</nav>
+<router-outlet></router-outlet>
+
+
