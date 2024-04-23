@@ -1,0 +1,40 @@
+<div class="doctors-list">
+    <h2>Doctors List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Gender</th>
+          <th>Age</th>
+          <th>Specialization</th>
+          <th>Address</th>
+          <th>Hospital Name</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doctor of service.doctors">
+          <td>{{ doctor.name }}</td>
+          <td>{{ doctor.email }}</td>
+          <td>{{ doctor.phoneNumber }}</td>
+          <td>{{ doctor.gender }}</td>
+          <td>{{ calculateAge(doctor.dob) }}</td>
+          <td>{{ doctor.specialization }}</td>
+          <td>{{ doctor.address }}</td>
+          <td>{{ doctor.hospital }}</td>
+          <td>{{getStatus(doctor.isApproved)}}</td>
+          <td>
+            <button class="mar" *ngIf="doctor.isApproved == 0" (click)="updateDoctor(doctor, 1)">Approve</button>
+            <button  class="mar" *ngIf="doctor.isApproved == 0" (click)="updateDoctor(doctor,2)">Reject</button>
+
+            <button  class="mar" *ngIf="doctor.isApproved == 1" (click)="updateDoctor(doctor,2)">Mark As Inactive</button>
+            <button  class="mar" *ngIf="doctor.isApproved == 2" (click)="updateDoctor(doctor,1)">Mark As Active</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
