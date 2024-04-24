@@ -1,0 +1,78 @@
+
+<div *ngIf="addButtonCLicked" class="margins">
+    <div class="form-group">
+      <label for="daysOfWeek">Days of Week:</label>
+      <select  class="form-control" id="daysOfWeek" [(ngModel)]="newSchedule.dayOfWeek" 
+      (change)="dayOfWeekSelected($event)" >
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+      </select>
+    </div>
+    
+    <label class="margins">Start Time:</label>
+    <input type="time" [(ngModel)]="newSchedule.startTime" required><br>
+    
+    <label class="margins">End Time:</label>
+    <input type="time" [(ngModel)]="newSchedule.endTime" required><br>
+    
+    <button type="submit margins" (click)="addSchedule()">Add Schedule</button>
+    <button type="submit" (click)="cancelAddSchedule()">Cancel Schedule</button>
+</div>
+
+<div class="hospital-table  " *ngIf="!addButtonCLicked">
+    <div>
+        <button (click)="toggleAddButton()" class="margins">
+            Add New Schedule
+        </button>
+    </div>
+    <table>
+        <thead>
+          <tr>
+            <th>Day of Week</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let schedule of service.schedules">
+            <ng-container *ngIf="!schedule.editMode; else editModeTemplate">
+                <td>{{ schedule.dayOfWeek      }}</td>
+                <td>{{ schedule.startTime }}</td>
+                <td>{{ schedule.endTime   }}</td>
+              <td>
+                <button (click)="toggleEditMode(schedule)">Edit</button>
+                <button (click)="removeSchedule(schedule)">Remove</button>
+              </td>
+            </ng-container>
+            <ng-template #editModeTemplate>
+              <td>
+                <select  class="form-control" id="daysOfWeek" 
+                (change)="dayOfWeekSelectedForUpdation($event)" [(ngModel)]="schedule.updatedDayOfWeek">
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                  <option value="Sunday">Sunday</option>
+                </select>
+              </td>
+              <td><input type="time" [(ngModel)]="schedule.updatedStartTime"></td>
+              <td><input type="time" [(ngModel)]="schedule.updatedEndTime"></td>
+              <td>
+                <button (click)="updateSchedule(schedule)">Save</button>
+                <button (click)="cancelEdit(schedule)">Cancel</button>
+              </td>
+            </ng-template>
+          </tr>
+        </tbody>
+      </table>
+</div>
+
+  
