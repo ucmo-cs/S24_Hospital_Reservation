@@ -1,0 +1,44 @@
+<div class="container">
+    <button  *ngIf="!showAddForm" class="add-button" (click)="toggleAddForm()">Add Specialization</button>
+  
+    <div *ngIf="showAddForm" class="add-form">
+      <h2>Add Specialization</h2>
+      <div >
+        <input type="text" placeholder="Name" [(ngModel)]="specialization.name" required><br>
+        <input type="text" placeholder="Description" [(ngModel)]="specialization.description" required><br>
+        <button type="submit"class="mar" (click)="addSpecialization()">Add</button>
+        <button type="submit"class="mar" (click)="toggleAddForm()">Back</button>
+      </div>
+    </div>
+  
+    <table class="specializations-table" *ngIf="!showAddForm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let specialization of service.specializations">
+            <ng-container *ngIf="!specialization.editMode; else editModeTemplate">
+              <td >{{ specialization.name }}</td>
+              <td >{{ specialization.description }}</td>
+              <td>
+                <button class="mar" (click)="toggleEditMode(specialization)">Edit</button>
+                <button class="mar" (click)="removeSpecialization(specialization._id)">Remove</button>
+              </td>
+            </ng-container>
+            <ng-template #editModeTemplate>
+              <td><input type="text" [(ngModel)]="specialization.updatedName" ></td>
+              <td><input type="text" [(ngModel)]="specialization.updatedDescription"></td>
+              <td>
+                <button class="mar" (click)="saveChanges(specialization)">Save</button>
+                <button class="mar" (click)="cancelEdit(specialization)">Cancel</button>
+              </td>
+            </ng-template>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+  
