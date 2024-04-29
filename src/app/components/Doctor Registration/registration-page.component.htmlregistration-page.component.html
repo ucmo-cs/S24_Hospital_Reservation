@@ -1,0 +1,134 @@
+<form>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" class="form-control" [(ngModel)]="user.name">
+    </div>
+  
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-control" [(ngModel)]="user.email">
+    </div>
+
+    <div  class="form-group mr-l-350" *ngIf="!isValidEmail(user.email)">
+      <span  class="error-message t-r"> Email entered is not valid.</span> 
+    </div>
+  
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="{{ isPasswordVisible ? 'text' : 'password' }}" [(ngModel)]="user.password"
+      name="password" class="form-control" id="password">
+      <span class="password-toggle-icon" [class.fa-eye]="isPasswordVisible"
+      [class.fa-eye-slash]="!isPasswordVisible" (click)="togglePasswordVisibility()"></span>
+    </div>
+  
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="{{ isConfirmPasswordVisible ? 'text' : 'password' }}" [(ngModel)]="confirmPassword"
+      name="password" class="form-control" id="password">
+      <span class="password-toggle-icon" [class.fa-eye]="isConfirmPasswordVisible"
+      [class.fa-eye-slash]="!isConfirmPasswordVisible" (click)="toggleConfirmPasswordVisibility()"></span>
+
+      
+    </div>
+
+
+      <div  class="form-group mr-l-350" *ngIf="user.password != confirmPassword">
+        <span  class="error-message t-r"> Passwords do not match</span> 
+      </div>
+
+    
+  
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="number" id="phoneNumber" name="phoneNumber" (change)="validatePhoneNumber($event)" class="form-control" [(ngModel)]="user.phoneNumber">
+    </div>
+
+    <div  class="form-group mr-l-350" *ngIf="!isPhoneNumberValid">
+      <span  class="error-message t-r"> Phone Number entered is not valid</span> 
+    </div>
+  
+    <div class="form-group">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" class="form-control" [(ngModel)]="user.dob">
+    </div>
+  
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" class="form-control" [(ngModel)]="user.gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role" class="form-control" [(ngModel)]="user.role">
+        <option value="patient">Patient</option>
+        <option value="doctor">Doctor</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" name="address" class="form-control" [(ngModel)]="user.address"></textarea>
+    </div>
+
+    <div *ngIf="user.role === 'patient'">
+      <div class="form-group"> <label for="weight">weight (In pounds):</label>
+        <input type="number" id="weight" name="weight" class="form-control" [(ngModel)]="user.weight">
+      </div>
+      <div class="form-group"> <label for="hospitalSelect">height:</label>
+        <input type="number" id="heightFeets" name="heightFeets" class="form-control" placeholder="Height in Feets" [(ngModel)]="user.heightFeets">
+        <input type="number" id="heightInches" name="heightInches" class="form-control" placeholder="Height in Inches"  [(ngModel)]="user.heightInches">
+      </div>
+      <div class="form-group">
+        <label for="healthDetails"> vital health details</label>
+        <textarea id="healthDetails" name="healthDetails" class="form-control" [(ngModel)]="user.healthDetails"></textarea>
+      </div>
+    </div>
+  
+    <div *ngIf="user.role === 'doctor'">
+      <div class="form-group"> <label for="hospitalSelect">Select Hospital:</label>
+      <select id="hospitalSelect" name="hospital" [(ngModel)]="user.selectedHospital" >
+        <option *ngFor="let hospital of service.hospitals" [value]="hospital._id">{{ hospital.name }}</option>
+      </select>
+      </div>
+      <div class="form-group">
+        <label for="specialization">Specialization</label>
+        <select id="specialization" name="specialization" class="form-control" [(ngModel)]="user.specialization">
+          <option *ngFor="let specialization of service.specializations" [value]="specialization._id">{{ specialization.name }}</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="bankName">Bank Name</label>
+        <input type="text" id="bankName" name="bankName" class="form-control" [(ngModel)]="user.bankName">
+      </div>
+  
+      <div class="form-group">
+        <label for="accountNumber">Account Number</label>
+        <input type="number" id="accountNumber" name="accountNumber" class="form-control" [(ngModel)]="user.accountNumber">
+      </div>
+
+      <div  class="form-group mr-l-350" *ngIf="!AccountNumberValidation(user.accountNumber)">
+        <span  class="error-message t-r"  > Account Number entered is not valid</span> 
+      </div>
+  
+      <div class="form-group">
+        <label for="routingNumber">Routing Number</label>
+        <input type="number" id="routingNumber" name="routingNumber" class="form-control" [(ngModel)]="user.routingNumber">
+      </div>
+      <div  class="form-group mr-l-350" *ngIf="!RoutingNumberValidation(user.routingNumber)">
+        <span  class="error-message t-r"> Routing Number entered is not valid</span> 
+      </div>
+  
+      <div class="form-group">
+        <label for="accountHolderName">Account Holder Name</label>
+        <input type="text" id="accountHolderName" name="accountHolderName" class="form-control" [(ngModel)]="user.accountHolderName">
+      </div>
+    </div>
+  
+    <button type="submit" class="btn btn-primary" (click)="registerUser()">Register</button>
+  </form>
+  
