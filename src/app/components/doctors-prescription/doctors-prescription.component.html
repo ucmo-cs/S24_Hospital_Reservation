@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="patient-details">
+                <h2>Patient Details</h2>
+                <p class="margins"><strong>Name:</strong> {{ patient.name }}</p>
+                <p class="margins"><strong>Email:</strong> {{ patient.email }}</p>
+                <p class="margins"><strong>Phone Number:</strong> {{ patient.phoneNumber }}</p>
+                <p class="margins"><strong>Age:</strong> {{ calculateAge(patient.dob) }}</p>
+                <p class="margins"><strong>Gender:</strong> {{ patient.gender }}</p>
+                <p class="margins"><strong>Address:</strong> {{ patient.address }}</p>
+                <p class="margins"><strong>Patient Health Vital Information:</strong> {{ patient.healthVitals }}</p>
+                <div class="form-group">
+                    <label for="amount">Amount Needs to be paid (In $):</label>
+                    <input type="text" id="amount" name="amount" class="form-control"
+                        [(ngModel)]="amount">
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="prescription-form">
+                <h2>Add Prescription</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="medicineName">Medicine Name</label>
+                        <input type="text" id="medicineName" name="medicineName" class="form-control"
+                            [(ngModel)]="prescription.medicineName">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dosage">Dosage</label>
+                        <input type="text" id="dosage" name="dosage" class="form-control"
+                            [(ngModel)]="prescription.dosage">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Duration (Days)</label>
+                        <input type="number" id="duration" name="duration" class="form-control"
+                            [(ngModel)]="prescription.duration">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timesPerDay">Times per Day</label>
+                        <input type="number" id="timesPerDay" name="timesPerDay" class="form-control"
+                            [(ngModel)]="prescription.timesPerDay">
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary" (click)="addClicked()">Add Another Prescription</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="margins" *ngIf="prescriptions && prescriptions.length > 0">
+            
+            <table class="prescriptions-table">
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Dosage</th>
+                        <th>Duration</th>
+                        <th>Times Per Day</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prescription of prescriptions; let i = index">
+                        <td>{{ prescription.medicineName }}</td>
+                        <td>{{ prescription.dosage }}</td>
+                        <td>{{ prescription.duration }}</td>
+                        <td>{{ prescription.timesPerDay }}</td>
+                        <td> <button (click)="removePrescription(prescription,i)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        </div>
+
+        <div *ngIf="prescriptions && prescriptions.length > 0">
+            <button type="submit" class="btn btn-primary" (click)="submitPrescription()">Submit Prescription</button>
+        </div>
+    </div>
+</div>
