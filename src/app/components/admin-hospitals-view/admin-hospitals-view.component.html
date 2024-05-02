@@ -1,0 +1,55 @@
+
+<div class="container">
+    <button class="add-button" (click)="toggleAddHospitalForm()" *ngIf="!showAddForm" >Add Hospital</button>
+    <div *ngIf="showAddForm" class="add-form">
+        <h2>Add Hospital</h2>
+        <div class="form-group">
+          <input type="text" placeholder="Name" [(ngModel)]="name" required><br>
+          <input type="text" placeholder="Address" [(ngModel)]="address" required><br>
+          <input type="text" placeholder="Type" [(ngModel)]="type" required><br>
+          <input type="text" placeholder="Phone" [(ngModel)]="phone" required><br>
+          <input type="text" placeholder="Email" [(ngModel)]="email" required><br>
+          <button type="submit" class="mar" (click)="addHospital()">Add Hospital</button>
+          <button type="submit" class="mar" (click)="toggleAddHospitalForm()">Back</button>
+        </div>
+      </div>
+    <table *ngIf="!showAddForm"  class="hospital-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Type</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hospital of service.hospitals">
+            <ng-container *ngIf="!hospital.editMode; else editModeTemplate">
+              <td>{{ hospital.name }}</td>
+              <td>{{ hospital.address }}</td>
+              <td>{{ hospital.type }}</td>
+              <td>{{ hospital.phone }}</td>
+              <td>{{ hospital.email }}</td>
+              <td>
+                <button class="mar" (click)="toggleEditMode(hospital)">Update</button>
+                <button class="mar" (click)="removeHospital(hospital._id)">Remove</button>
+              </td>
+            </ng-container>
+            <ng-template #editModeTemplate>
+              <td><input type="text" [(ngModel)]="hospital.updatedName"></td>
+              <td><input type="text" [(ngModel)]="hospital.updatedAddress"></td>
+              <td><input type="text" [(ngModel)]="hospital.updatedType"></td>
+              <td><input type="text" [(ngModel)]="hospital.updatedPhone"></td>
+              <td><input type="text" [(ngModel)]="hospital.updatedEmail"></td>
+              <td>
+                <button class="mar"(click)="saveHospital(hospital)">Save</button>
+                <button class="mar"(click)="toggleEditMode(hospital)">Cancel</button>
+              </td>
+            </ng-template>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+  
