@@ -1,0 +1,133 @@
+<div class="appointments-list" *ngIf="!prescriptionViewed">
+    <h2>Appointments List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Patient Email</th>
+          <th>Patient Phone Number</th>
+          <th>Patient Health Vital Information</th>
+          <th>Doctor Name</th>
+          <th>Doctor Email</th>
+          <th>Doctor Phone Number</th>
+          <th>Appointment Date</th>
+          <th>Time Slot</th>
+          <th>Appointment Status</th>
+          <th >Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.patientName }}</td>
+          <td>{{ appointment.patientEmail }}</td>
+          <td>{{ appointment.patientNumber }}</td>
+          <td>{{appointment.patientVitalInfo}}</td>
+          <td>{{ appointment.doctorName }}</td>
+          <td>{{ appointment.doctorEmail }}</td>
+          <td>{{ appointment.doctorNumber }}</td>
+          <td *ngIf="!appointment.isRescheduleClicked">{{ appointment.appointmentDate }}</td>
+          <td *ngIf="!appointment.isRescheduleClicked">{{ appointment.timeSlot }}</td>
+         
+          <td *ngIf="appointment.isRescheduleClicked"><input type="date"  [(ngModel)]="selectedDate" (change)="onSelectedDateChange(appointment, $event)" ></td>
+          <td *ngIf="appointment.isRescheduleClicked">
+            <select id="appointmentTime" name="appointmentTime" [(ngModel)]="selectedTimeslot" (change)="checkSlotAvaliability(appointment)">
+              <option *ngFor="let slot of slots" [value]="slot">{{ slot }}</option>
+            </select>
+            <div *ngIf="!isSlotAvaliable" class="margins error">
+              <span >Slot is not avaliable for booking consultation/Another appointment was made for particular slot.Please select another slot.</span>
+          
+            </div>
+          </td>
+          <td>{{appointment.status}}</td>
+          <td>
+            <button class="mar" *ngIf="appointment.status == 'Prescription Added'" (click)="viewPrescription(appointment)" >View Prescription</button>
+
+            <button class="mar" *ngIf="appointment.isRescheduleClicked " [disabled]="!isSlotAvaliable"  (click)="submitReschedule(appointment)" >Submit Reschedule</button>
+            <button class="mar" *ngIf="service.isPatient && appointment.status == 'Consultation Requested'" (click)="updateAppointment(appointment, 'Cancel')">Cancel</button>
+            <button class="mar" *ngIf="service.isPatient && appointment.status !== 'Rejected' && appointment.status !== 'Completed' && appointment.status !== 'Prescription Added' &&  appointment.status !== 'Cancel' && !appointment.isRescheduleClicked" (click)="RescheduleClicked(appointment)" >Reschedule</button>
+            <button class="mar" *ngIf="appointment.isRescheduleClicked" (click)="cancelReschedule(appointment)" >Cancel Reschedule</button>
+
+            <button class="mar" *ngIf="service.isDoctor && (appointment.status == 'Consultation Requested' || appointment.status == 'Rescheduled')" (click)="updateAppointment(appointment, 'Approved')">Approve</button>    
+            <button class="mar" *ngIf="service.isDoctor && (appointment.status == 'Consultation Requested' || appointment.status == 'Rescheduled')" (click)="updateAppointment(appointment,'Rejected')">Reject</button>
+            <button class="mar" *ngIf="service.isDoctor && appointment.status == 'Approved'" (click)="updateAppointment(appointment, 'Completed')" >Complete Consultation</button>
+            <button class="mar" *ngIf="service.isDoctor && appointment.status == 'Completed'" (click)="addPrescription(appointment)">Add Prescription</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="margins" *ngIf="prescriptionViewed">
+        
+    <table class="prescriptions-table">
+        <thead>
+            <tr>
+                <th>Medicine Name</th>
+                <th>Dosage</th>
+                <th>Duration</th>
+                <th>Times Per Day</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let prescription of prescriptions; let i = index">
+                <td>{{ prescription.medicineName }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.duration }}</td>
+                <td>{{ prescription.timesPerDay }}</td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <label *ngIf="appointmentSelected && appointmentSelected.amountInDollars" >Amount to be paid(In $): {{appointmentSelected.amountInDollars}}</label>
+    <button class="margins" *ngIf="isShowPaynowBtn && service.isPatient" (click) ="showPaymentSection()">Pay Now</button>
+    <button class="margins" (click)="backClicked()">Back</button>
+</div>
+
+ <div *ngIf="isShowPaymentSection">
+  <div>
+    <div class="form-group">
+      <label for="selectedPaymentMethod">Select Card Type:</label>
+    <select id="selectedPaymentMethod" name="selectedPaymentMethod" [(ngModel)]="paymentDetails.selectedPaymentMethod">
+      <option value="debit">Debit Card</option>
+          <option value="credit">Credit Card</option>
+    </select>
+    </div>
+    <div class="form-group">
+      <label for="cardNumber">Card Number:</label>
+      <input type="number" id="cardNumber" name="cardNumber" [(ngModel)]="paymentDetails.cardNumber">
+    </div>
+    <div  class="form-group mr-l-350">
+      <span  *ngIf="!cardNumberValidation()"  class="error-message t-r"> Entered Card Number is not valid</span> 
+    </div>
+
+    <div class="form-group">
+      <label for="cardNumber">CVV:</label>
+      <input type="number" id="cardNumber" name="cardNumber" (change)="validateCvv($event)" [(ngModel)]="paymentDetails.cvv">
+    </div>
+    <div class="form-group mr-l-350">
+      <span  *ngIf="!isCvvValid"  class="error-message t-r"> Entered CVV is not valid</span> 
+    </div>
+
+    <div class="form-group">
+      <label for="cardNumber">Name On Card:</label>
+      <input type="text" id="cardNumber" name="cardNumber" [(ngModel)]="paymentDetails.nameOnCard">
+    </div>
+
+
+    <div class="form-group">
+      <label for="expireDate" class=" margins">Expiry Date(MM/YY)</label>
+      <input type="text" id="expiryDate" class="mr-r-15  mr-l-15" (change)="validateExpiryDate($event)" name="expiryDate"
+        [(ngModel)]="paymentDetails.expireDate" required>
+      
+    </div>
+    <div class="form-group mr-l-350">
+      <span  *ngIf="!isMonthValid || !isFutureDate"  class="error-message t-r"> Invalid Expiry Date</span>
+    </div>
+
+
+
+    <button type="submit" (click)="submitPayment()">Submit Payment</button>
+  </div>
+</div>
+  
